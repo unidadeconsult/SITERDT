@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Loader2, Save } from 'lucide-react';
 import type { Article, Category } from '../types';
+import ImageUploadField from './ImageUploadField';
 
 const categories: Category[] = [
   'Brasileirão',
@@ -130,30 +131,22 @@ export default function ArticleForm({ initial, submitLabel, onSubmit }: ArticleF
             className="w-full bg-rdt-black/60 border border-white/10 rounded px-3 py-2 text-white text-sm focus:outline-none focus:border-rdt-gold"
           />
         </div>
-        <div>
-          <label className="text-xs font-condensed uppercase tracking-wide text-white/50 mb-1 block">
-            URL do avatar do autor
-          </label>
-          <input
-            value={authorAvatar}
-            onChange={(e) => setAuthorAvatar(e.target.value)}
-            placeholder="https://..."
-            className="w-full bg-rdt-black/60 border border-white/10 rounded px-3 py-2 text-white text-sm focus:outline-none focus:border-rdt-gold"
-          />
-        </div>
-      </div>
-
-      <div>
-        <label className="text-xs font-condensed uppercase tracking-wide text-white/50 mb-1 block">
-          URL da imagem de capa *
-        </label>
-        <input
-          value={image}
-          onChange={(e) => setImage(e.target.value)}
-          placeholder="https://..."
-          className="w-full bg-rdt-black/60 border border-white/10 rounded px-3 py-2 text-white text-sm focus:outline-none focus:border-rdt-gold"
+        <ImageUploadField
+          label="Avatar do autor"
+          hint="ideal: 400×400px, quadrada"
+          value={authorAvatar}
+          onChange={setAuthorAvatar}
+          round
         />
       </div>
+
+      <ImageUploadField
+        label="Imagem de capa"
+        hint="ideal: 1600×900px (16:9)"
+        value={image}
+        onChange={setImage}
+        required
+      />
 
       <div>
         <label className="text-xs font-condensed uppercase tracking-wide text-white/50 mb-1 block">
