@@ -5,6 +5,11 @@ import type { Article } from '../types';
 const communityCategory = (category: Article['category']) =>
   category === 'Crônica' ? 'OPINIÃO' : 'NOTÍCIA';
 
+// URL pública e estável do portal, autorizada junto à Comunidade RDT.
+// Não usar window.location.origin: em previews (ex: PRs) o domínio muda
+// a cada branch e não está na lista de domínios autorizados da API.
+const SITE_URL = import.meta.env.VITE_SITE_URL || 'https://siterdt.vercel.app';
+
 export default function ShareToCommunity({ article }: { article: Article }) {
   const [open, setOpen] = useState(false);
   const [password, setPassword] = useState('');
@@ -25,7 +30,7 @@ export default function ShareToCommunity({ article }: { article: Article }) {
           externalId: article.id,
           title: article.title,
           text: article.dek.slice(0, 300),
-          url: `${window.location.origin}/artigo/${article.id}`,
+          url: `${SITE_URL}/artigo/${article.id}`,
           category: communityCategory(article.category),
           imageUrl: article.image,
           publishedAt: article.publishedAt,
