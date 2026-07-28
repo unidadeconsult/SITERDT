@@ -1,0 +1,410 @@
+import type {
+  Article,
+  LiveMatch,
+  HighlightVideo,
+  Transfer,
+  OnThisDayFact,
+  Poll,
+  FanPost,
+} from '../types';
+
+const img = (id: string, w = 1200) =>
+  `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=80`;
+
+const avatar = (n: number) => `https://i.pravatar.cc/150?img=${n}`;
+
+export const liveMatches: LiveMatch[] = [
+  {
+    id: 'm1',
+    competition: 'Brasileirão',
+    homeTeam: 'Flamengo',
+    homeAbbr: 'FLA',
+    awayTeam: 'Palmeiras',
+    awayAbbr: 'PAL',
+    homeScore: 2,
+    awayScore: 1,
+    status: 'AO VIVO',
+    time: "78'",
+    cards: [{ team: 'away', type: 'yellow' }],
+  },
+  {
+    id: 'm2',
+    competition: 'Libertadores',
+    homeTeam: 'River Plate',
+    homeAbbr: 'RIV',
+    awayTeam: 'Grêmio',
+    awayAbbr: 'GRE',
+    homeScore: 0,
+    awayScore: 0,
+    status: 'AO VIVO',
+    time: "34'",
+  },
+  {
+    id: 'm3',
+    competition: 'La Liga',
+    homeTeam: 'Real Madrid',
+    homeAbbr: 'RMA',
+    awayTeam: 'Barcelona',
+    awayAbbr: 'BAR',
+    homeScore: 3,
+    awayScore: 2,
+    status: 'FIM',
+    time: 'Encerrado',
+  },
+  {
+    id: 'm4',
+    competition: 'Premier League',
+    homeTeam: 'Manchester City',
+    homeAbbr: 'MCI',
+    awayTeam: 'Liverpool',
+    awayAbbr: 'LIV',
+    homeScore: 0,
+    awayScore: 0,
+    status: 'HOJE',
+    time: '16:30',
+  },
+  {
+    id: 'm5',
+    competition: 'Copa do Brasil',
+    homeTeam: 'Corinthians',
+    homeAbbr: 'COR',
+    awayTeam: 'São Paulo',
+    awayAbbr: 'SAO',
+    homeScore: 1,
+    awayScore: 1,
+    status: 'FIM',
+    time: 'Encerrado',
+  },
+  {
+    id: 'm6',
+    competition: 'Serie A',
+    homeTeam: 'Inter de Milão',
+    homeAbbr: 'INT',
+    awayTeam: 'Juventus',
+    awayAbbr: 'JUV',
+    homeScore: 0,
+    awayScore: 0,
+    status: 'HOJE',
+    time: '15:45',
+  },
+];
+
+export const articles: Article[] = [
+  {
+    id: 'a1',
+    title: 'Flamengo vira sobre o Palmeiras e assume a ponta do Brasileirão',
+    dek: 'Em noite inspirada no Maracanã, rubro-negro busca virada heroica nos minutos finais e desbanca líder isolado.',
+    category: 'Brasileirão',
+    author: 'Marcos Villela',
+    authorAvatar: avatar(12),
+    date: '28 de julho de 2026',
+    readTime: 6,
+    image: img('photo-1508098682722-e99c43a406b2'),
+    featured: true,
+    body: [
+      'O Maracanã voltou a tremer na noite deste domingo. Diante de mais de 65 mil torcedores, o Flamengo protagonizou uma daquelas viradas que entram para o anedotário do clube, superando o Palmeiras por 2 a 1 e assumindo, provisoriamente, a ponta da tabela do Campeonato Brasileiro.',
+      'O primeiro tempo foi de amplo domínio paulista. Organizado taticamente, o Palmeiras abriu o placar aos 22 minutos em jogada de bola parada, calando a torcida rubro-negra e parecendo, àquela altura, capaz de administrar a vantagem até o apito final.',
+      'A virada começou a ser desenhada no intervalo. Mudanças ousadas no meio-campo deram mais verticalidade ao Flamengo, que passou a pressionar a saída de bola adversária com intensidade. O empate saiu aos 31 da etapa final, em finalização de fora da área que explodiu no ângulo.',
+      'Nos acréscimos, já com o Maracanã em festa antecipada, o time da casa buscou o gol da virada em contra-ataque fulminante, fechado com categoria pelo camisa 9, que não perdoou a saída precipitada do goleiro.',
+      'Com o resultado, o Flamengo chega aos 58 pontos e assume a liderança isolada, à espera dos resultados dos concorrentes diretos ainda nesta rodada. Já o Palmeiras estaciona na terceira colocação e vê a distância aumentar na briga pelo título.',
+    ],
+    comments: [
+      {
+        id: 'c1',
+        author: 'Rogério T.',
+        avatar: avatar(23),
+        date: 'há 2 horas',
+        text: 'Que virada, meu Deus! O Maracanã treme quando o Mengão acredita até o fim.',
+        likes: 48,
+        replies: [
+          {
+            id: 'c1r1',
+            author: 'Fernanda A.',
+            avatar: avatar(45),
+            date: 'há 1 hora',
+            text: 'Torço contra, mas reconheço que foi um segundo tempo espetacular.',
+            likes: 12,
+            replies: [],
+          },
+        ],
+      },
+      {
+        id: 'c2',
+        author: 'Palmeirense_09',
+        avatar: avatar(31),
+        date: 'há 3 horas',
+        text: 'Faltou gerenciamento de jogo no fim. Vacilo coletivo custou caro.',
+        likes: 21,
+        replies: [],
+      },
+    ],
+  },
+  {
+    id: 'a2',
+    title: 'Seleção Brasileira divulga convocação para as Eliminatórias',
+    dek: 'Nomes de peso e novidades na lista para os confrontos decisivos rumo à próxima Copa do Mundo.',
+    category: 'Seleção',
+    author: 'Camila Duarte',
+    authorAvatar: avatar(14),
+    date: '27 de julho de 2026',
+    readTime: 4,
+    image: img('photo-1517927033932-b3d18e61fb3a'),
+    body: [
+      'O técnico da Seleção Brasileira anunciou nesta manhã a lista de 26 jogadores convocados para os próximos dois compromissos pelas Eliminatórias.',
+      'Entre as novidades, chama atenção a presença de um jovem lateral revelado no futebol paulista, que vive grande fase no seu clube e foi recompensado pelo desempenho consistente nos últimos meses.',
+      'A comissão técnica destacou o equilíbrio entre experiência e renovação como pilar da nova convocação, mirando o ciclo de reconstrução após a última competição continental.',
+    ],
+    comments: [],
+  },
+  {
+    id: 'a3',
+    title: 'River Plate e Grêmio fazem duelo equilibrado pela Libertadores',
+    dek: 'Times chegam fortes para a partida de ida das quartas de final no Monumental de Núñez.',
+    category: 'Libertadores',
+    author: 'Diego Fontana',
+    authorAvatar: avatar(18),
+    date: '27 de julho de 2026',
+    readTime: 5,
+    image: img('photo-1522778119026-d647f0596c20'),
+    body: [
+      'O Monumental de Núñez recebe hoje um dos confrontos mais aguardados das quartas de final da Libertadores. River Plate e Grêmio protagonizam um duelo histórico entre duas das maiores torcidas do continente.',
+      'Ambos os treinadores prometem times ofensivos, apostando na tradição de suas equipes em competições continentais.',
+    ],
+    comments: [],
+  },
+  {
+    id: 'a4',
+    title: 'Crônica: a tarde em que o interior parou para ver um gol de placa',
+    dek: 'Resgatamos a história de uma final de campeonato estadual que entrou para a memória afetiva de uma cidade inteira.',
+    category: 'Crônica',
+    author: 'Heitor Salgado',
+    authorAvatar: avatar(22),
+    date: '26 de julho de 2026',
+    readTime: 8,
+    image: img('photo-1489944440615-453fc2b6a1a7'),
+    body: [
+      'Havia algo de sagrado nas tardes de domingo daquele campeonato estadual. As famílias chegavam cedo, os bares do entorno lotavam, e o gramado esburacado ganhava contornos de Maracanã aos olhos de quem ali estava.',
+      'Foi numa dessas tardes que o camisa 10 recebeu a bola no meio-campo, driblou três marcadores e acertou um chute de fora da área que ainda hoje é contado de geração em geração.',
+      'Mais do que um gol, aquele lance virou patrimônio afetivo da cidade — prova de que o futebol de várzea também escreve sua própria épica.',
+    ],
+    comments: [],
+  },
+  {
+    id: 'a5',
+    title: 'Manchester City x Liverpool: prévia do duelo que pode decidir a Premier League',
+    dek: 'Confronto direto entre líder e vice-líder acontece hoje, com ambos precisando da vitória.',
+    category: 'Europa',
+    author: 'Bianca Ferro',
+    authorAvatar: avatar(29),
+    date: '28 de julho de 2026',
+    readTime: 5,
+    image: img('photo-1431324155629-1a6deb1dec8d'),
+    body: [
+      'A rodada decisiva da Premier League chega ao seu ápice hoje, com o duelo direto entre Manchester City e Liverpool, separados por apenas dois pontos na tabela.',
+      'Especialistas apontam que o meio-campo será a chave tática da partida, com ambos os treinadores dispostos a arriscar formações mais ofensivas.',
+    ],
+    comments: [],
+  },
+  {
+    id: 'a6',
+    title: 'Corinthians e São Paulo empatam em clássico movimentado pela Copa do Brasil',
+    dek: 'Timão e Tricolor ficam no 1 a 1 na Neo Química Arena, em jogo de vantagens alternadas.',
+    category: 'Copa do Brasil',
+    author: 'Marcos Villela',
+    authorAvatar: avatar(12),
+    date: '25 de julho de 2026',
+    readTime: 4,
+    image: img('photo-1550881111-7cfde14b8073'),
+    body: [
+      'Clássico paulista terminou empatado em 1 a 1 na Neo Química Arena, em confronto válido pela Copa do Brasil.',
+      'O resultado deixa a decisão de vaga em aberto para o jogo de volta, que promete ser eletrizante.',
+    ],
+    comments: [],
+  },
+];
+
+export const highlightVideos: HighlightVideo[] = [
+  {
+    id: 'v1',
+    videoId: 'dQw4w9WgXcQ',
+    title: 'Os melhores momentos de Flamengo 2x1 Palmeiras',
+    competition: 'Brasileirão',
+    duration: '8:42',
+    thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg',
+  },
+  {
+    id: 'v2',
+    videoId: 'M7lc1UVf-VE',
+    title: 'Gols e lances de River Plate x Grêmio',
+    competition: 'Libertadores',
+    duration: '6:15',
+    thumbnail: 'https://img.youtube.com/vi/M7lc1UVf-VE/hqdefault.jpg',
+  },
+  {
+    id: 'v3',
+    videoId: 'ysz5S6PUM-U',
+    title: 'Real Madrid 3x2 Barcelona — Resumo completo',
+    competition: 'La Liga',
+    duration: '9:30',
+    thumbnail: 'https://img.youtube.com/vi/ysz5S6PUM-U/hqdefault.jpg',
+  },
+  {
+    id: 'v4',
+    videoId: 'jNQXAC9IVRw',
+    title: 'Corinthians 1x1 São Paulo — Melhores momentos',
+    competition: 'Copa do Brasil',
+    duration: '5:48',
+    thumbnail: 'https://img.youtube.com/vi/jNQXAC9IVRw/hqdefault.jpg',
+  },
+];
+
+export const transfers: Transfer[] = [
+  {
+    id: 't1',
+    player: 'Matheus Cunha',
+    fromClub: 'Wolverhampton',
+    toClub: 'Flamengo',
+    status: 'Esquentou',
+    probability: 68,
+    detail: 'Negociação avança e clube brasileiro prepara segunda proposta oficial.',
+  },
+  {
+    id: 't2',
+    player: 'Endrick Silva',
+    fromClub: 'Palmeiras',
+    toClub: 'Real Madrid',
+    status: 'Confirmado',
+    probability: 100,
+    detail: 'Contrato assinado até 2030, jovem se apresenta na pré-temporada europeia.',
+  },
+  {
+    id: 't3',
+    player: 'Facundo Torres',
+    fromClub: 'Orlando City',
+    toClub: 'Grêmio',
+    status: 'Rumor',
+    probability: 24,
+    detail: 'Empresário nega conversas avançadas, mas diretoria monitora situação.',
+  },
+  {
+    id: 't4',
+    player: 'Kaique Rocha',
+    fromClub: 'Corinthians',
+    toClub: 'Benfica',
+    status: 'Esquentou',
+    probability: 55,
+    detail: 'Representantes do clube português já estiveram no Brasil para tratativas.',
+  },
+];
+
+export const onThisDayFacts: OnThisDayFact[] = [
+  {
+    id: 'o1',
+    year: 1994,
+    title: 'Brasil conquista o tetracampeonato mundial',
+    description:
+      'Nos Estados Unidos, a Seleção Brasileira venceu a Itália nos pênaltis e ergueu a quarta taça da Copa do Mundo.',
+  },
+  {
+    id: 'o2',
+    year: 2002,
+    title: 'Ronaldo Fenômeno é artilheiro da Copa do Mundo',
+    description:
+      'Com 8 gols no torneio, o atacante confirmou sua recuperação após graves lesões e foi decisivo na conquista do penta.',
+  },
+  {
+    id: 'o3',
+    year: 1976,
+    title: 'Clássico histórico entra para a memória da torcida',
+    description:
+      'Uma partida repleta de gols e reviravoltas ficou marcada como uma das mais emocionantes já disputadas entre os rivais.',
+  },
+  {
+    id: 'o4',
+    year: 1958,
+    title: 'Pelé estreia em Copas do Mundo com atuação decisiva',
+    description:
+      'Aos 17 anos, o camisa 10 brasileiro começou a construir a lenda que o consagraria como um dos maiores da história.',
+  },
+  {
+    id: 'o5',
+    year: 1999,
+    title: 'Final continental entra para o anedotário do clube',
+    description:
+      'Gol nos minutos finais decidiu um dos títulos mais comemorados da década, com festa que tomou conta das ruas.',
+  },
+  {
+    id: 'o6',
+    year: 1970,
+    title: 'Seleção Brasileira conquista o tricampeonato mundial',
+    description:
+      'Time considerado um dos maiores de todos os tempos venceu a Itália na final e ficou definitivamente com a Jules Rimet.',
+  },
+  {
+    id: 'o7',
+    year: 2011,
+    title: 'Virada improvável define campeão nacional na última rodada',
+    description:
+      'Combinação de resultados em jogos simultâneos surpreendeu torcidas e mudou o destino do título de última hora.',
+  },
+  {
+    id: 'o8',
+    year: 1984,
+    title: 'Ídolo local marca gol que virou símbolo da torcida',
+    description:
+      'Comemoração entrou para o imaginário popular e até hoje é reproduzida por gerações de torcedores nas arquibancadas.',
+  },
+];
+
+export const dailyPoll: Poll = {
+  id: 'p1',
+  question: 'Quem vence o clássico decisivo deste fim de semana?',
+  options: [
+    { id: 'opt1', label: 'Time da casa', votes: 1423 },
+    { id: 'opt2', label: 'Time visitante', votes: 987 },
+    { id: 'opt3', label: 'Empate', votes: 342 },
+  ],
+};
+
+export const fanPosts: FanPost[] = [
+  {
+    id: 'f1',
+    author: 'Juliana Mendes',
+    avatar: avatar(51),
+    team: 'Flamengo',
+    date: 'há 40 minutos',
+    text: 'Torço desde criança e nunca vi um segundo tempo tão emocionante quanto o de hoje. O Mengão é vida!',
+    likes: 132,
+    replies: [
+      {
+        id: 'f1r1',
+        author: 'Carlos Nunes',
+        avatar: avatar(52),
+        date: 'há 20 minutos',
+        text: 'Concordo demais, virada histórica!',
+        likes: 14,
+        replies: [],
+      },
+    ],
+  },
+  {
+    id: 'f2',
+    author: 'Pedro Amaral',
+    avatar: avatar(53),
+    team: 'Palmeiras',
+    date: 'há 1 hora',
+    text: 'Faltou controle emocional no final, mas o time cresceu muito nesse campeonato. Confio no elenco pro returno.',
+    likes: 76,
+    replies: [],
+  },
+  {
+    id: 'f3',
+    author: 'Ana Beatriz',
+    avatar: avatar(54),
+    team: 'Grêmio',
+    date: 'há 3 horas',
+    text: 'Noite de Libertadores é diferente de tudo. Nervoso demais para o jogo de hoje contra o River!',
+    likes: 54,
+    replies: [],
+  },
+];
