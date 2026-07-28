@@ -1,24 +1,26 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Repeat } from 'lucide-react';
 import { transfers } from '../data/mockData';
-import type { TransferStatus } from '../types';
 import TransferCard from '../components/TransferCard';
 import PageHeader from '../components/PageHeader';
 
-const filters: (TransferStatus | 'Todos')[] = ['Todos', 'Rumor', 'Esquentou', 'Confirmado'];
-
 export default function MercadoPage() {
-  const [filter, setFilter] = useState<TransferStatus | 'Todos'>('Todos');
+  const [filter, setFilter] = useState<string>('Todos');
+
+  const filters = useMemo(
+    () => ['Todos', ...Array.from(new Set(transfers.map((t) => t.country)))],
+    []
+  );
 
   const filtered =
-    filter === 'Todos' ? transfers : transfers.filter((t) => t.status === filter);
+    filter === 'Todos' ? transfers : transfers.filter((t) => t.country === filter);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <PageHeader
         icon={Repeat}
         title="Mercado da Bola"
-        subtitle="Acompanhe o transferômetro RDT: rumores, negociações esquentando e contratações confirmadas do futebol brasileiro e internacional."
+        subtitle="Transferências históricas da América do Sul: relembre as contratações internacionais que marcaram o futebol sul-americano."
       />
 
       <div className="flex gap-2 mb-6 flex-wrap">

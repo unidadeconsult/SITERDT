@@ -64,6 +64,8 @@ export interface Transfer {
   status: TransferStatus;
   probability: number;
   detail: string;
+  year: number;
+  country: string;
 }
 
 export interface OnThisDayFact {

@@ -1,4 +1,4 @@
-import { ArrowRightLeft } from 'lucide-react';
+import { ArrowRightLeft, Calendar, MapPin } from 'lucide-react';
 import type { Transfer } from '../types';
 import TransferStatusBadge from './TransferStatusBadge';
 
@@ -21,6 +21,16 @@ export default function TransferCard({ transfer }: { transfer: Transfer }) {
         <span className="text-white/80 font-medium">{transfer.toClub}</span>
       </div>
       <p className="text-white/40 text-xs mt-2 leading-relaxed">{transfer.detail}</p>
+      <div className="flex items-center gap-3 mt-2.5 text-[11px] text-white/40">
+        <span className="flex items-center gap-1">
+          <Calendar size={11} />
+          {transfer.year}
+        </span>
+        <span className="flex items-center gap-1">
+          <MapPin size={11} />
+          {transfer.country}
+        </span>
+      </div>
       <div className="mt-3">
         <div className="flex items-center justify-between text-[11px] text-white/40 mb-1">
           <span>Probabilidade</span>
