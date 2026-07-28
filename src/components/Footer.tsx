@@ -78,8 +78,11 @@ export default function Footer() {
           </div>
         </div>
       </div>
-      <div className="border-t border-white/5 py-5 text-center text-white/30 text-xs">
-        © 2026 RDT — Resenha da Torcida. Todos os direitos reservados.
+      <div className="border-t border-white/5 py-5 flex items-center justify-center gap-3 text-center text-white/30 text-xs">
+        <span>© 2026 RDT — Resenha da Torcida. Todos os direitos reservados.</span>
+        <Link to="/admin" className="hover:text-white/60 transition-colors">
+          Admin
+        </Link>
       </div>
     </footer>
   );

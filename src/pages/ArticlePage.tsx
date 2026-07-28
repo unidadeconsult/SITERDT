@@ -1,6 +1,6 @@
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, Clock, Calendar } from 'lucide-react';
-import { articles } from '../data/mockData';
+import { useArticles } from '../context/ArticlesContext';
 import CategoryTag from '../components/CategoryTag';
 import CommentSection from '../components/CommentSection';
 import ArticleCard from '../components/ArticleCard';
@@ -9,6 +9,7 @@ import ShareToCommunity from '../components/ShareToCommunity';
 export default function ArticlePage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { articles } = useArticles();
   const article = articles.find((a) => a.id === id);
 
   if (!article) {

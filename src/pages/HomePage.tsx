@@ -6,7 +6,7 @@ import OnThisDayWidget from '../components/OnThisDayWidget';
 import TransferMarketWidget from '../components/TransferMarketWidget';
 import PollWidget from '../components/PollWidget';
 import VozDaArquibancada from '../components/VozDaArquibancada';
-import { articles } from '../data/mockData';
+import { useArticles } from '../context/ArticlesContext';
 import type { HighlightVideo } from '../types';
 import { MessagesSquare, ClipboardList, ArrowRight } from 'lucide-react';
 
@@ -16,8 +16,11 @@ interface HomePageProps {
 }
 
 export default function HomePage({ videos, onAddVideo }: HomePageProps) {
+  const { articles } = useArticles();
   const featured = articles.find((a) => a.featured) ?? articles[0];
-  const rest = articles.filter((a) => a.id !== featured.id);
+  const rest = articles.filter((a) => a.id !== featured?.id);
+
+  if (!featured) return null;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col gap-12">

@@ -1,9 +1,10 @@
 import { PenSquare } from 'lucide-react';
-import { articles } from '../data/mockData';
+import { useArticles } from '../context/ArticlesContext';
 import PageHeader from '../components/PageHeader';
 import ArticleCard from '../components/ArticleCard';
 
 export default function ColunasPage() {
+  const { articles } = useArticles();
   const authors = Array.from(new Set(articles.map((a) => a.author)));
 
   return (
