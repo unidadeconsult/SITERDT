@@ -1,8 +1,8 @@
+import { Link } from 'react-router-dom';
 import { CalendarClock, ArrowRight } from 'lucide-react';
 import { onThisDayFacts } from '../data/mockData';
-import type { View } from '../navigation';
 
-export default function OnThisDayWidget({ onNavigate }: { onNavigate: (v: View) => void }) {
+export default function OnThisDayWidget() {
   const today = new Date().toLocaleDateString('pt-BR', {
     day: '2-digit',
     month: 'long',
@@ -28,13 +28,13 @@ export default function OnThisDayWidget({ onNavigate }: { onNavigate: (v: View) 
         ))}
       </div>
 
-      <button
-        onClick={() => onNavigate('nestedia')}
+      <Link
+        to="/neste-dia-no-futebol"
         className="mt-4 w-full flex items-center justify-center gap-2 text-rdt-gold text-sm font-condensed font-semibold uppercase tracking-wide border border-rdt-gold/30 rounded py-2 hover:bg-rdt-gold hover:text-rdt-black transition-colors"
       >
         Ver acervo completo
         <ArrowRight size={16} />
-      </button>
+      </Link>
     </div>
   );
 }

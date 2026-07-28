@@ -3,11 +3,7 @@ import { articles } from '../data/mockData';
 import PageHeader from '../components/PageHeader';
 import ArticleCard from '../components/ArticleCard';
 
-interface ColunasPageProps {
-  onOpenArticle: (id: string) => void;
-}
-
-export default function ColunasPage({ onOpenArticle }: ColunasPageProps) {
+export default function ColunasPage() {
   const authors = Array.from(new Set(articles.map((a) => a.author)));
 
   return (
@@ -39,7 +35,7 @@ export default function ColunasPage({ onOpenArticle }: ColunasPageProps) {
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
                 {authorArticles.map((article) => (
-                  <ArticleCard key={article.id} article={article} onOpen={onOpenArticle} />
+                  <ArticleCard key={article.id} article={article} />
                 ))}
               </div>
             </div>

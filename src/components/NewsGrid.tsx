@@ -2,13 +2,7 @@ import { useState, useMemo } from 'react';
 import type { Article, Category } from '../types';
 import ArticleCard from './ArticleCard';
 
-export default function NewsGrid({
-  articles,
-  onOpen,
-}: {
-  articles: Article[];
-  onOpen: (id: string) => void;
-}) {
+export default function NewsGrid({ articles }: { articles: Article[] }) {
   const [filter, setFilter] = useState<Category | 'Todos'>('Todos');
 
   const categories = useMemo(
@@ -46,7 +40,7 @@ export default function NewsGrid({
 
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
         {filtered.map((article) => (
-          <ArticleCard key={article.id} article={article} onOpen={onOpen} />
+          <ArticleCard key={article.id} article={article} />
         ))}
       </div>
 

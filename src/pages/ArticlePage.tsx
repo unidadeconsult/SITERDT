@@ -1,28 +1,23 @@
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, Clock, Calendar } from 'lucide-react';
 import { articles } from '../data/mockData';
 import CategoryTag from '../components/CategoryTag';
 import CommentSection from '../components/CommentSection';
 import ArticleCard from '../components/ArticleCard';
+import ShareToCommunity from '../components/ShareToCommunity';
 
-interface ArticlePageProps {
-  articleId: string | null;
-  onOpenArticle: (id: string) => void;
-  onBack: () => void;
-}
-
-export default function ArticlePage({ articleId, onOpenArticle, onBack }: ArticlePageProps) {
-  const article = articles.find((a) => a.id === articleId);
+export default function ArticlePage() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const article = articles.find((a) => a.id === id);
 
   if (!article) {
     return (
       <div className="max-w-3xl mx-auto px-4 py-16 text-center">
         <p className="text-white/60">Matéria não encontrada.</p>
-        <button
-          onClick={onBack}
-          className="mt-4 text-rdt-gold underline underline-offset-4"
-        >
+        <Link to="/" className="mt-4 inline-block text-rdt-gold underline underline-offset-4">
           Voltar para o início
-        </button>
+        </Link>
       </div>
     );
   }
@@ -37,7 +32,7 @@ export default function ArticlePage({ articleId, onOpenArticle, onBack }: Articl
         <div className="absolute inset-0 bg-gradient-to-t from-rdt-black via-rdt-black/70 to-black/20" />
         <div className="absolute inset-0 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-end pb-8">
           <button
-            onClick={onBack}
+            onClick={() => navigate('/')}
             className="flex items-center gap-1.5 text-white/70 hover:text-rdt-gold text-sm mb-4 w-fit transition-colors"
           >
             <ArrowLeft size={16} />
@@ -51,25 +46,28 @@ export default function ArticlePage({ articleId, onOpenArticle, onBack }: Articl
       </div>
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
-        <div className="flex items-center gap-4 pb-6 border-b border-white/10">
-          <img
-            src={article.authorAvatar}
-            alt={article.author}
-            className="w-12 h-12 rounded-full object-cover border-2 border-rdt-gold/50"
-          />
-          <div>
-            <p className="text-white font-semibold text-sm">{article.author}</p>
-            <div className="flex items-center gap-3 text-white/40 text-xs mt-0.5">
-              <span className="flex items-center gap-1">
-                <Calendar size={12} />
-                {article.date}
-              </span>
-              <span className="flex items-center gap-1">
-                <Clock size={12} />
-                {article.readTime} min de leitura
-              </span>
+        <div className="flex items-center justify-between gap-4 pb-6 border-b border-white/10 flex-wrap">
+          <div className="flex items-center gap-4">
+            <img
+              src={article.authorAvatar}
+              alt={article.author}
+              className="w-12 h-12 rounded-full object-cover border-2 border-rdt-gold/50"
+            />
+            <div>
+              <p className="text-white font-semibold text-sm">{article.author}</p>
+              <div className="flex items-center gap-3 text-white/40 text-xs mt-0.5">
+                <span className="flex items-center gap-1">
+                  <Calendar size={12} />
+                  {article.date}
+                </span>
+                <span className="flex items-center gap-1">
+                  <Clock size={12} />
+                  {article.readTime} min de leitura
+                </span>
+              </div>
             </div>
           </div>
+          <ShareToCommunity article={article} />
         </div>
 
         <div className="mt-6 flex flex-col gap-5">
@@ -88,7 +86,7 @@ export default function ArticlePage({ articleId, onOpenArticle, onBack }: Articl
             <h2 className="font-display font-bold text-white text-xl mb-4">Leia também</h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {relatedFallback.map((a) => (
-                <ArticleCard key={a.id} article={a} onOpen={onOpenArticle} />
+                <ArticleCard key={a.id} article={a} />
               ))}
             </div>
           </div>

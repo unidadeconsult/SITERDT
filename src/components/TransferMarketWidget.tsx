@@ -1,9 +1,9 @@
+import { Link } from 'react-router-dom';
 import { Repeat, ArrowRight } from 'lucide-react';
 import { transfers } from '../data/mockData';
-import type { View } from '../navigation';
 import TransferCard from './TransferCard';
 
-export default function TransferMarketWidget({ onNavigate }: { onNavigate: (v: View) => void }) {
+export default function TransferMarketWidget() {
   return (
     <div className="bg-rdt-graphite/40 border border-white/5 rounded-lg p-5">
       <div className="flex items-center gap-2 mb-4">
@@ -17,13 +17,13 @@ export default function TransferMarketWidget({ onNavigate }: { onNavigate: (v: V
         ))}
       </div>
 
-      <button
-        onClick={() => onNavigate('mercado')}
+      <Link
+        to="/mercado-da-bola"
         className="mt-4 w-full flex items-center justify-center gap-2 text-rdt-gold text-sm font-condensed font-semibold uppercase tracking-wide border border-rdt-gold/30 rounded py-2 hover:bg-rdt-gold hover:text-rdt-black transition-colors"
       >
         Ver transferômetro completo
         <ArrowRight size={16} />
-      </button>
+      </Link>
     </div>
   );
 }

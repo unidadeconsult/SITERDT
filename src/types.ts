@@ -24,6 +24,7 @@ export interface Article {
   author: string;
   authorAvatar: string;
   date: string;
+  publishedAt: string;
   readTime: number;
   image: string;
   featured?: boolean;
@@ -105,3 +106,26 @@ export interface PitchPosition {
   y: number;
   label: string;
 }
+
+export interface CommunityPost {
+  id: number;
+  text: string;
+  category: string;
+  author: {
+    name: string;
+    handle: string;
+    badge: string;
+  };
+  publishedAt: string;
+  communityUrl: string;
+  image: { url: string; alt: string } | null;
+  source: string | null;
+  metrics: {
+    likes: number;
+    stars: number;
+    comments: number;
+  };
+  featured: boolean;
+  origin: string;
+}
+

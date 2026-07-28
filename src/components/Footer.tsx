@@ -1,7 +1,8 @@
+import { Link } from 'react-router-dom';
 import { Shield, Share2, AtSign, Radio, Play } from 'lucide-react';
-import { navItems, type View } from '../navigation';
+import { navItems } from '../navigation';
 
-export default function Footer({ onNavigate }: { onNavigate: (view: View) => void }) {
+export default function Footer() {
   return (
     <footer className="bg-rdt-black border-t border-rdt-gold/20 mt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid grid-cols-1 md:grid-cols-3 gap-10">
@@ -24,13 +25,13 @@ export default function Footer({ onNavigate }: { onNavigate: (view: View) => voi
           </h3>
           <ul className="space-y-2">
             {navItems.map((item) => (
-              <li key={item.view}>
-                <button
-                  onClick={() => onNavigate(item.view)}
+              <li key={item.path}>
+                <Link
+                  to={item.path}
                   className="text-white/60 hover:text-white text-sm transition-colors"
                 >
                   {item.label}
-                </button>
+                </Link>
               </li>
             ))}
           </ul>

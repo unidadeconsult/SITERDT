@@ -1,18 +1,13 @@
+import { Link } from 'react-router-dom';
 import { Clock } from 'lucide-react';
 import type { Article } from '../types';
 import CategoryTag from './CategoryTag';
 
-export default function HeroSection({
-  article,
-  onOpen,
-}: {
-  article: Article;
-  onOpen: (id: string) => void;
-}) {
+export default function HeroSection({ article }: { article: Article }) {
   return (
-    <div
-      onClick={() => onOpen(article.id)}
-      className="relative rounded-lg overflow-hidden cursor-pointer group h-[420px] sm:h-[480px] lg:h-[560px]"
+    <Link
+      to={`/artigo/${article.id}`}
+      className="relative rounded-lg overflow-hidden cursor-pointer group h-[420px] sm:h-[480px] lg:h-[560px] block"
     >
       <img
         src={article.image}
@@ -41,6 +36,6 @@ export default function HeroSection({
           </span>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

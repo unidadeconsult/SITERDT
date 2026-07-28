@@ -1,17 +1,12 @@
+import { Link } from 'react-router-dom';
 import { Clock } from 'lucide-react';
 import type { Article } from '../types';
 import CategoryTag from './CategoryTag';
 
-export default function ArticleCard({
-  article,
-  onOpen,
-}: {
-  article: Article;
-  onOpen: (id: string) => void;
-}) {
+export default function ArticleCard({ article }: { article: Article }) {
   return (
-    <article
-      onClick={() => onOpen(article.id)}
+    <Link
+      to={`/artigo/${article.id}`}
       className="group cursor-pointer bg-rdt-graphite/60 border border-white/5 rounded-lg overflow-hidden hover:border-rdt-gold/40 transition-colors flex flex-col"
     >
       <div className="relative aspect-[16/10] overflow-hidden">
@@ -36,6 +31,6 @@ export default function ArticleCard({
           </span>
         </div>
       </div>
-    </article>
+    </Link>
   );
 }

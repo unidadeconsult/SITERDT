@@ -145,6 +145,7 @@ export const articles: Article[] = [
     author: 'Marcos Villela',
     authorAvatar: avatar(12),
     date: '28 de julho de 2026',
+    publishedAt: '2026-07-28T21:30:00.000Z',
     readTime: 6,
     image: img('photo-1508098682722-e99c43a406b2'),
     featured: true,
@@ -194,6 +195,7 @@ export const articles: Article[] = [
     author: 'Camila Duarte',
     authorAvatar: avatar(14),
     date: '27 de julho de 2026',
+    publishedAt: '2026-07-27T13:00:00.000Z',
     readTime: 4,
     image: img('photo-1517927033932-b3d18e61fb3a'),
     body: [
@@ -211,6 +213,7 @@ export const articles: Article[] = [
     author: 'Diego Fontana',
     authorAvatar: avatar(18),
     date: '27 de julho de 2026',
+    publishedAt: '2026-07-27T18:00:00.000Z',
     readTime: 5,
     image: img('photo-1522778119026-d647f0596c20'),
     body: [
@@ -227,6 +230,7 @@ export const articles: Article[] = [
     author: 'Heitor Salgado',
     authorAvatar: avatar(22),
     date: '26 de julho de 2026',
+    publishedAt: '2026-07-26T15:00:00.000Z',
     readTime: 8,
     image: img('photo-1489944440615-453fc2b6a1a7'),
     body: [
@@ -244,6 +248,7 @@ export const articles: Article[] = [
     author: 'Bianca Ferro',
     authorAvatar: avatar(29),
     date: '28 de julho de 2026',
+    publishedAt: '2026-07-28T11:00:00.000Z',
     readTime: 5,
     image: img('photo-1431324155629-1a6deb1dec8d'),
     body: [
@@ -260,6 +265,7 @@ export const articles: Article[] = [
     author: 'Marcos Villela',
     authorAvatar: avatar(12),
     date: '25 de julho de 2026',
+    publishedAt: '2026-07-25T20:00:00.000Z',
     readTime: 4,
     image: img('photo-1550881111-7cfde14b8073'),
     body: [
