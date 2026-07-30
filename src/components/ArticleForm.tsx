@@ -3,7 +3,7 @@ import { Loader2, Save } from 'lucide-react';
 import type { Article, Category } from '../types';
 import ImageUploadField from './ImageUploadField';
 
-const categories: Category[] = [
+export const categories: Category[] = [
   'Brasileirão',
   'Libertadores',
   'Seleção',

@@ -4,6 +4,7 @@ import { ShieldCheck, Plus, Pencil, Trash2, ArrowLeft, Lock, Sparkles, ExternalL
 import { useArticles } from '../context/ArticlesContext';
 import { getStoredAdminPassword, setStoredAdminPassword, clearStoredAdminPassword } from '../lib/adminAuth';
 import ArticleForm, { type ArticleFormFields } from '../components/ArticleForm';
+import GeneratorDrafts from '../components/GeneratorDrafts';
 import PageHeader from '../components/PageHeader';
 import type { Article } from '../types';
 
@@ -176,26 +177,24 @@ export default function AdminPage() {
           Gerador de Matérias
         </h1>
 
-        <div className="bg-rdt-graphite/50 border border-white/5 rounded-lg p-8 text-center flex flex-col items-center gap-4">
-          <p className="text-white/60 text-sm max-w-md">
+        <div className="bg-rdt-graphite/50 border border-white/5 rounded-lg p-6 flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
+          <p className="text-white/60 text-sm">
             Essa ferramenta usa o login do ChatGPT, que por segurança não permite ser exibida
-            dentro de outro site. Abra em uma nova guia, gere a matéria por lá, e depois copie o
-            título, resumo e texto para o formulário{' '}
-            <button onClick={() => setView('create')} className="text-rdt-gold underline underline-offset-4">
-              Nova Matéria
-            </button>
-            .
+            dentro de outro site. Gere a matéria lá — assim que estiver com status "Pronto", ela
+            aparece na lista abaixo para importar com um clique.
           </p>
           <a
             href={GENERATOR_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 bg-rdt-gold text-rdt-black font-condensed font-bold uppercase tracking-wide text-sm px-4 py-2.5 rounded hover:bg-white transition-colors"
+            className="flex items-center gap-2 bg-rdt-gold text-rdt-black font-condensed font-bold uppercase tracking-wide text-sm px-4 py-2.5 rounded hover:bg-white transition-colors shrink-0"
           >
             <ExternalLink size={16} />
-            Abrir Gerador de Matérias
+            Abrir Gerador
           </a>
         </div>
+
+        <GeneratorDrafts onImported={refetch} />
       </div>
     );
   }

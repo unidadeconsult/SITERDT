@@ -6,6 +6,17 @@ export type Category =
   | 'Copa do Brasil'
   | 'Crônica';
 
+export interface GeneratorDraft {
+  id: string;
+  title: string;
+  dek: string;
+  category: string;
+  body: string[];
+  imageUrl?: string;
+  createdAt: string;
+  status: string;
+}
+
 export interface Comment {
   id: string;
   author: string;
