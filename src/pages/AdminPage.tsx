@@ -171,11 +171,21 @@ export default function AdminPage() {
           Voltar para o painel
         </button>
 
-        <div className="flex items-center justify-between flex-wrap gap-3 mb-4">
-          <h1 className="font-display font-bold text-white text-2xl flex items-center gap-2">
-            <Sparkles className="text-rdt-gold" size={24} />
-            Gerador de Matérias
-          </h1>
+        <h1 className="font-display font-bold text-white text-2xl flex items-center gap-2 mb-4">
+          <Sparkles className="text-rdt-gold" size={24} />
+          Gerador de Matérias
+        </h1>
+
+        <div className="bg-rdt-graphite/50 border border-white/5 rounded-lg p-8 text-center flex flex-col items-center gap-4">
+          <p className="text-white/60 text-sm max-w-md">
+            Essa ferramenta usa o login do ChatGPT, que por segurança não permite ser exibida
+            dentro de outro site. Abra em uma nova guia, gere a matéria por lá, e depois copie o
+            título, resumo e texto para o formulário{' '}
+            <button onClick={() => setView('create')} className="text-rdt-gold underline underline-offset-4">
+              Nova Matéria
+            </button>
+            .
+          </p>
           <a
             href={GENERATOR_URL}
             target="_blank"
@@ -183,25 +193,8 @@ export default function AdminPage() {
             className="flex items-center gap-2 bg-rdt-gold text-rdt-black font-condensed font-bold uppercase tracking-wide text-sm px-4 py-2.5 rounded hover:bg-white transition-colors"
           >
             <ExternalLink size={16} />
-            Abrir em nova guia
+            Abrir Gerador de Matérias
           </a>
-        </div>
-
-        <p className="text-white/50 text-sm mb-4">
-          Gere a matéria aqui, depois copie o título, resumo e texto para o formulário{' '}
-          <button onClick={() => setView('create')} className="text-rdt-gold underline underline-offset-4">
-            Nova Matéria
-          </button>
-          . Se a página abaixo aparecer em branco, o site não permite ser exibido dentro de outro
-          site — use o botão "Abrir em nova guia" acima.
-        </p>
-
-        <div className="rounded-lg overflow-hidden border border-white/10 bg-white" style={{ height: '75vh' }}>
-          <iframe
-            src={GENERATOR_URL}
-            title="Gerador de Matérias RDT"
-            className="w-full h-full"
-          />
         </div>
       </div>
     );
