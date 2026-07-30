@@ -8,6 +8,9 @@ interface GeneratorDraftsProps {
   onImported: () => void;
 }
 
+const DEFAULT_IMAGE =
+  'https://images.unsplash.com/photo-1522778119026-d647f0596c20?auto=format&fit=crop&w=1200&q=80';
+
 function estimateReadTime(body: string[]) {
   const words = body.join(' ').split(/\s+/).filter(Boolean).length;
   return Math.max(1, Math.round(words / 200));
@@ -62,7 +65,7 @@ export default function GeneratorDrafts({ onImported }: GeneratorDraftsProps) {
           category,
           author: 'Redação RDT',
           authorAvatar: '',
-          image: draft.imageUrl || '',
+          image: draft.imageUrl || DEFAULT_IMAGE,
           readTime: estimateReadTime(draft.body),
           body: draft.body,
         }),
