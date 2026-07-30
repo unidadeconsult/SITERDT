@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ShieldCheck, Plus, Pencil, Trash2, ArrowLeft, Lock } from 'lucide-react';
+import { ShieldCheck, Plus, Pencil, Trash2, ArrowLeft, Lock, Sparkles, ExternalLink } from 'lucide-react';
 import { useArticles } from '../context/ArticlesContext';
 import { getStoredAdminPassword, setStoredAdminPassword, clearStoredAdminPassword } from '../lib/adminAuth';
 import ArticleForm, { type ArticleFormFields } from '../components/ArticleForm';
 import PageHeader from '../components/PageHeader';
 import type { Article } from '../types';
 
-type View = 'list' | 'create' | 'edit';
+const GENERATOR_URL = 'https://onze-x-sete-rdt.dhanrdt.chatgpt.site/';
+
+type View = 'list' | 'create' | 'edit' | 'generator';
 
 export default function AdminPage() {
   const { articles, loading, refetch } = useArticles();
@@ -158,6 +160,53 @@ export default function AdminPage() {
     );
   }
 
+  if (view === 'generator') {
+    return (
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <button
+          onClick={() => setView('list')}
+          className="flex items-center gap-1.5 text-white/60 hover:text-rdt-gold text-sm mb-6"
+        >
+          <ArrowLeft size={16} />
+          Voltar para o painel
+        </button>
+
+        <div className="flex items-center justify-between flex-wrap gap-3 mb-4">
+          <h1 className="font-display font-bold text-white text-2xl flex items-center gap-2">
+            <Sparkles className="text-rdt-gold" size={24} />
+            Gerador de Matérias
+          </h1>
+          <a
+            href={GENERATOR_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 bg-rdt-gold text-rdt-black font-condensed font-bold uppercase tracking-wide text-sm px-4 py-2.5 rounded hover:bg-white transition-colors"
+          >
+            <ExternalLink size={16} />
+            Abrir em nova guia
+          </a>
+        </div>
+
+        <p className="text-white/50 text-sm mb-4">
+          Gere a matéria aqui, depois copie o título, resumo e texto para o formulário{' '}
+          <button onClick={() => setView('create')} className="text-rdt-gold underline underline-offset-4">
+            Nova Matéria
+          </button>
+          . Se a página abaixo aparecer em branco, o site não permite ser exibido dentro de outro
+          site — use o botão "Abrir em nova guia" acima.
+        </p>
+
+        <div className="rounded-lg overflow-hidden border border-white/10 bg-white" style={{ height: '75vh' }}>
+          <iframe
+            src={GENERATOR_URL}
+            title="Gerador de Matérias RDT"
+            className="w-full h-full"
+          />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex items-center justify-between flex-wrap gap-4 mb-2">
@@ -167,6 +216,13 @@ export default function AdminPage() {
           subtitle="Crie, edite e remova matérias do portal RDT."
         />
         <div className="flex gap-2 -mt-8">
+          <button
+            onClick={() => setView('generator')}
+            className="flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/15 text-white font-condensed font-semibold uppercase tracking-wide text-sm px-4 py-2.5 rounded transition-colors"
+          >
+            <Sparkles size={16} />
+            Gerador de Matérias
+          </button>
           <button
             onClick={() => setView('create')}
             className="flex items-center gap-2 bg-rdt-gold text-rdt-black font-condensed font-bold uppercase tracking-wide text-sm px-4 py-2.5 rounded hover:bg-white transition-colors"
