@@ -1,7 +1,7 @@
 import { getRedis } from '../lib/redis.js';
 import { seedArticles } from '../lib/seedArticles.js';
 
-const KEY = 'rdt:articles';
+const HASH_KEY = 'rdt:articles:v2';
 
 function slugify(title) {
   return title
@@ -13,11 +13,19 @@ function slugify(title) {
     .slice(0, 60);
 }
 
-async function loadArticles(redis) {
-  const stored = await redis.get(KEY);
-  if (stored && Array.isArray(stored)) return stored;
-  await redis.set(KEY, seedArticles);
-  return seedArticles;
+async function loadArticlesMap(redis) {
+  const map = await redis.hgetall(HASH_KEY);
+  if (map && Object.keys(map).length > 0) return map;
+  const seedMap = {};
+  for (const a of seedArticles) seedMap[a.id] = a;
+  await redis.hset(HASH_KEY, seedMap);
+  return seedMap;
+}
+
+function sortedArticles(map) {
+  return Object.values(map).sort(
+    (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+  );
 }
 
 export default async function handler(req, res) {
@@ -36,9 +44,9 @@ export default async function handler(req, res) {
   }
 
   if (req.method === 'GET') {
-    const articles = await loadArticles(redis);
+    const map = await loadArticlesMap(redis);
     res.setHeader('Cache-Control', 's-maxage=10, stale-while-revalidate=59');
-    res.status(200).json(articles);
+    res.status(200).json(sortedArticles(map));
     return;
   }
 
@@ -54,8 +62,6 @@ export default async function handler(req, res) {
     return;
   }
 
-  const articles = await loadArticles(redis);
-
   if (req.method === 'POST') {
     const { title, dek, category, author, authorAvatar, image, readTime, body: paragraphs } = body;
     if (!title || !dek || !category || !author || !image || !paragraphs?.length) {
@@ -63,8 +69,9 @@ export default async function handler(req, res) {
       return;
     }
     const now = new Date();
+    const id = `${slugify(title)}-${Date.now().toString(36)}`;
     const article = {
-      id: `${slugify(title)}-${Date.now().toString(36)}`,
+      id,
       title,
       dek,
       category,
@@ -77,35 +84,31 @@ export default async function handler(req, res) {
       body: paragraphs,
       comments: [],
     };
-    const next = [article, ...articles];
-    await redis.set(KEY, next);
+    await redis.hset(HASH_KEY, { [id]: article });
     res.status(201).json({ ok: true, article });
     return;
   }
 
   if (req.method === 'PUT') {
     const { id, ...fields } = body;
-    const index = articles.findIndex((a) => a.id === id);
-    if (index === -1) {
+    const existing = await redis.hget(HASH_KEY, id);
+    if (!existing) {
       res.status(404).json({ ok: false, error: 'Matéria não encontrada.' });
       return;
     }
-    const updated = { ...articles[index], ...fields, id };
-    const next = [...articles];
-    next[index] = updated;
-    await redis.set(KEY, next);
+    const updated = { ...existing, ...fields, id };
+    await redis.hset(HASH_KEY, { [id]: updated });
     res.status(200).json({ ok: true, article: updated });
     return;
   }
 
   if (req.method === 'DELETE') {
     const { id } = body;
-    const next = articles.filter((a) => a.id !== id);
-    if (next.length === articles.length) {
+    const removed = await redis.hdel(HASH_KEY, id);
+    if (!removed) {
       res.status(404).json({ ok: false, error: 'Matéria não encontrada.' });
       return;
     }
-    await redis.set(KEY, next);
     res.status(200).json({ ok: true });
     return;
   }
