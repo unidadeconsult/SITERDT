@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom';
 import { Repeat, ArrowRight } from 'lucide-react';
-import { transfers } from '../data/mockData';
+import { useTransfers } from '../context/TransfersContext';
 import TransferCard from './TransferCard';
 
 export default function TransferMarketWidget() {
+  const { items: transfers } = useTransfers();
   return (
     <div className="bg-rdt-graphite/40 border border-white/5 rounded-lg p-5">
       <div className="flex items-center gap-2 mb-4">

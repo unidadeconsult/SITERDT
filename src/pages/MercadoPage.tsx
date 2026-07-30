@@ -1,15 +1,16 @@
 import { useMemo, useState } from 'react';
 import { Repeat } from 'lucide-react';
-import { transfers } from '../data/mockData';
+import { useTransfers } from '../context/TransfersContext';
 import TransferCard from '../components/TransferCard';
 import PageHeader from '../components/PageHeader';
 
 export default function MercadoPage() {
+  const { items: transfers } = useTransfers();
   const [filter, setFilter] = useState<string>('Todos');
 
   const filters = useMemo(
     () => ['Todos', ...Array.from(new Set(transfers.map((t) => t.country)))],
-    []
+    [transfers]
   );
 
   const filtered =

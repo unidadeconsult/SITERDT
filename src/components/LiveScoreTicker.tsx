@@ -1,4 +1,5 @@
 import { Radio } from 'lucide-react';
+import { useTicker } from '../context/TickerContext';
 import type { LiveMatch } from '../types';
 
 function MatchPill({ match }: { match: LiveMatch }) {
@@ -30,7 +31,9 @@ function MatchPill({ match }: { match: LiveMatch }) {
   );
 }
 
-export default function LiveScoreTicker({ matches }: { matches: LiveMatch[] }) {
+export default function LiveScoreTicker() {
+  const { items: matches } = useTicker();
+  if (matches.length === 0) return null;
   const doubled = [...matches, ...matches];
   return (
     <div className="bg-rdt-black border-b border-rdt-gold/20 overflow-hidden">

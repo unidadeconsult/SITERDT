@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom';
 import { CalendarClock, ArrowRight } from 'lucide-react';
-import { onThisDayFacts } from '../data/mockData';
+import { useOnThisDay } from '../context/OnThisDayContext';
 
 export default function OnThisDayWidget() {
+  const { items: onThisDayFacts } = useOnThisDay();
   const today = new Date().toLocaleDateString('pt-BR', {
     day: '2-digit',
     month: 'long',

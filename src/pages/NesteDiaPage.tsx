@@ -1,8 +1,9 @@
 import { CalendarClock } from 'lucide-react';
-import { onThisDayFacts } from '../data/mockData';
+import { useOnThisDay } from '../context/OnThisDayContext';
 import PageHeader from '../components/PageHeader';
 
 export default function NesteDiaPage() {
+  const { items: onThisDayFacts } = useOnThisDay();
   const today = new Date().toLocaleDateString('pt-BR', {
     day: '2-digit',
     month: 'long',

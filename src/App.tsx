@@ -12,7 +12,11 @@ import PranchetaPage from './pages/PranchetaPage';
 import ArticlePage from './pages/ArticlePage';
 import AdminPage from './pages/AdminPage';
 import { ArticlesProvider } from './context/ArticlesContext';
-import { liveMatches, highlightVideos as initialVideos } from './data/mockData';
+import { TickerProvider } from './context/TickerContext';
+import { TransfersProvider } from './context/TransfersContext';
+import { OnThisDayProvider } from './context/OnThisDayContext';
+import { PollProvider } from './context/PollContext';
+import { highlightVideos as initialVideos } from './data/mockData';
 import type { HighlightVideo } from './types';
 
 function ScrollToTop() {
@@ -33,24 +37,32 @@ export default function App() {
   return (
     <BrowserRouter>
       <ArticlesProvider>
-        <ScrollToTop />
-        <div className="min-h-screen bg-rdt-black flex flex-col">
-          <LiveScoreTicker matches={liveMatches} />
-          <Navbar />
-          <main className="flex-1">
-            <Routes>
-              <Route path="/" element={<HomePage videos={videos} onAddVideo={addVideo} />} />
-              <Route path="/mercado-da-bola" element={<MercadoPage />} />
-              <Route path="/neste-dia-no-futebol" element={<NesteDiaPage />} />
-              <Route path="/mural-da-torcida" element={<MuralPage />} />
-              <Route path="/colunas" element={<ColunasPage />} />
-              <Route path="/prancheta-tatica" element={<PranchetaPage />} />
-              <Route path="/artigo/:id" element={<ArticlePage />} />
-              <Route path="/admin" element={<AdminPage />} />
-            </Routes>
-          </main>
-          <Footer />
-        </div>
+        <TickerProvider>
+          <TransfersProvider>
+            <OnThisDayProvider>
+              <PollProvider>
+                <ScrollToTop />
+                <div className="min-h-screen bg-rdt-black flex flex-col">
+                  <LiveScoreTicker />
+                  <Navbar />
+                  <main className="flex-1">
+                    <Routes>
+                      <Route path="/" element={<HomePage videos={videos} onAddVideo={addVideo} />} />
+                      <Route path="/mercado-da-bola" element={<MercadoPage />} />
+                      <Route path="/neste-dia-no-futebol" element={<NesteDiaPage />} />
+                      <Route path="/mural-da-torcida" element={<MuralPage />} />
+                      <Route path="/colunas" element={<ColunasPage />} />
+                      <Route path="/prancheta-tatica" element={<PranchetaPage />} />
+                      <Route path="/artigo/:id" element={<ArticlePage />} />
+                      <Route path="/admin" element={<AdminPage />} />
+                    </Routes>
+                  </main>
+                  <Footer />
+                </div>
+              </PollProvider>
+            </OnThisDayProvider>
+          </TransfersProvider>
+        </TickerProvider>
       </ArticlesProvider>
     </BrowserRouter>
   );
