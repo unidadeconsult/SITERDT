@@ -1,7 +1,8 @@
 import { getRedis } from '../lib/redis.js';
 import { seedArticles } from '../lib/seedArticles.js';
 
-const HASH_KEY = 'rdt:articles:v2';
+const HASH_KEY = 'rdt:articles:v3';
+const LEGACY_KEY = 'rdt:articles';
 
 function slugify(title) {
   return title
@@ -16,8 +17,13 @@ function slugify(title) {
 async function loadArticlesMap(redis) {
   const map = await redis.hgetall(HASH_KEY);
   if (map && Object.keys(map).length > 0) return map;
+
+  // Primeira leitura no novo formato: migra o array antigo (se existir) em
+  // vez de simplesmente re-semear, para não perder matérias já criadas.
+  const legacy = await redis.get(LEGACY_KEY);
+  const base = Array.isArray(legacy) && legacy.length > 0 ? legacy : seedArticles;
   const seedMap = {};
-  for (const a of seedArticles) seedMap[a.id] = a;
+  for (const a of base) seedMap[a.id] = a;
   await redis.hset(HASH_KEY, seedMap);
   return seedMap;
 }
