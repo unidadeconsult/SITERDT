@@ -43,6 +43,8 @@ export default function CommentSection({
       if (res.ok && data.ok) {
         setComments((prev) => [data.comment, ...prev]);
         setText('');
+      } else if (res.status === 429) {
+        alert(data.error || 'Muitos comentários em pouco tempo. Aguarde um instante.');
       }
     } catch {
       /* falha silenciosa de rede */

@@ -48,6 +48,8 @@ export default function CommentItem({
         setReplies((prev) => [...prev, data.comment]);
         setText('');
         setShowForm(false);
+      } else if (res.status === 429) {
+        alert(data.error || 'Muitos comentários em pouco tempo. Aguarde um instante.');
       }
     } catch {
       /* falha silenciosa de rede */

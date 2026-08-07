@@ -41,6 +41,8 @@ export default function MuralPage() {
         setPosts((prev) => [data.post, ...prev]);
         setText('');
         setTeam('');
+      } else if (res.status === 429) {
+        alert(data.error || 'Muitas publicações em pouco tempo. Aguarde um instante.');
       }
     } catch {
       /* falha silenciosa de rede */

@@ -40,6 +40,8 @@ export default function FanPostCard({ post }: { post: FanPost }) {
         setReplies((prev) => [...prev, data.reply]);
         setReplyText('');
         setShowReplies(true);
+      } else if (res.status === 429) {
+        alert(data.error || 'Muitas respostas em pouco tempo. Aguarde um instante.');
       }
     } catch {
       /* falha silenciosa de rede */

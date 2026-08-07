@@ -1,6 +1,8 @@
 {
   "rewrites": [
     { "source": "/artigo/:id", "destination": "/api/article-page?id=:id" },
+    { "source": "/sitemap.xml", "destination": "/api/feed?type=sitemap" },
+    { "source": "/rss.xml", "destination": "/api/feed?type=rss" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

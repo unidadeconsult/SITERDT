@@ -1,4 +1,5 @@
 import { getRedis } from '../lib/redis.js';
+import { clientIp, checkRateLimit } from '../lib/rateLimit.js';
 
 const listKey = (articleId) => `rdt:comments:${articleId}`;
 const likesKey = (articleId) => `rdt:comment-likes:${articleId}`;
@@ -68,6 +69,11 @@ export default async function handler(req, res) {
       res.status(400).json({ ok: false, error: 'Preencha todos os campos.' });
       return;
     }
+    const allowed = await checkRateLimit(redis, `rdt:ratelimit:comment-post:${clientIp(req)}`, 5, 60);
+    if (!allowed) {
+      res.status(429).json({ ok: false, error: 'Muitos comentários em pouco tempo. Aguarde um instante.' });
+      return;
+    }
     const comment = {
       id: `c-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`,
       parentId: parentId || null,
@@ -88,6 +94,11 @@ export default async function handler(req, res) {
     const { articleId, commentId } = req.body ?? {};
     if (!articleId || !commentId) {
       res.status(400).json({ ok: false, error: 'Dados ausentes.' });
+      return;
+    }
+    const allowed = await checkRateLimit(redis, `rdt:ratelimit:comment-like:${clientIp(req)}`, 30, 60);
+    if (!allowed) {
+      res.status(429).json({ ok: false, error: 'Muitas curtidas em pouco tempo. Aguarde um instante.' });
       return;
     }
     const likes = await redis.hincrby(likesKey(articleId), commentId, 1);

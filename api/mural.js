@@ -1,4 +1,5 @@
 import { getRedis } from '../lib/redis.js';
+import { clientIp, checkRateLimit } from '../lib/rateLimit.js';
 
 const POSTS_KEY = 'rdt:mural:posts';
 const LIKES_KEY = 'rdt:mural:likes';
@@ -58,6 +59,11 @@ export default async function handler(req, res) {
       res.status(400).json({ ok: false, error: 'Preencha todos os campos.' });
       return;
     }
+    const allowed = await checkRateLimit(redis, `rdt:ratelimit:mural-post:${clientIp(req)}`, 5, 60);
+    if (!allowed) {
+      res.status(429).json({ ok: false, error: 'Muitas publicações em pouco tempo. Aguarde um instante.' });
+      return;
+    }
 
     if (postId) {
       const reply = {
@@ -92,6 +98,11 @@ export default async function handler(req, res) {
     const { postId } = req.body ?? {};
     if (!postId) {
       res.status(400).json({ ok: false, error: 'Dados ausentes.' });
+      return;
+    }
+    const allowed = await checkRateLimit(redis, `rdt:ratelimit:mural-like:${clientIp(req)}`, 30, 60);
+    if (!allowed) {
+      res.status(429).json({ ok: false, error: 'Muitas curtidas em pouco tempo. Aguarde um instante.' });
       return;
     }
     const likes = await redis.hincrby(LIKES_KEY, postId, 1);
