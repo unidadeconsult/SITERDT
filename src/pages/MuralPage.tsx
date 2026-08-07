@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { MessagesSquare, Send } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { MessagesSquare, Send, Loader2 } from 'lucide-react';
 import { fanPosts as initialPosts } from '../data/mockData';
 import type { FanPost } from '../types';
 import PageHeader from '../components/PageHeader';
@@ -9,23 +9,44 @@ export default function MuralPage() {
   const [posts, setPosts] = useState<FanPost[]>(initialPosts);
   const [text, setText] = useState('');
   const [team, setTeam] = useState('');
+  const [sending, setSending] = useState(false);
 
-  const submitPost = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!text.trim()) return;
-    const newPost: FanPost = {
-      id: `post-${Date.now()}`,
-      author: 'Você',
-      avatar: 'https://i.pravatar.cc/150?img=68',
-      team: team.trim() || 'Torcedor RDT',
-      date: 'agora mesmo',
-      text: text.trim(),
-      likes: 0,
-      replies: [],
+  useEffect(() => {
+    let cancelled = false;
+    fetch('/api/mural')
+      .then((res) => (res.ok ? res.json() : Promise.reject(res)))
+      .then((data) => {
+        if (!cancelled && Array.isArray(data)) setPosts(data);
+      })
+      .catch(() => {
+        /* mantém os posts iniciais em caso de falha */
+      });
+    return () => {
+      cancelled = true;
     };
-    setPosts((prev) => [newPost, ...prev]);
-    setText('');
-    setTeam('');
+  }, []);
+
+  const submitPost = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!text.trim() || sending) return;
+    setSending(true);
+    try {
+      const res = await fetch('/api/mural', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ author: 'Você', team: team.trim(), text: text.trim() }),
+      });
+      const data = await res.json();
+      if (res.ok && data.ok) {
+        setPosts((prev) => [data.post, ...prev]);
+        setText('');
+        setTeam('');
+      }
+    } catch {
+      /* falha silenciosa de rede */
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -61,9 +82,10 @@ export default function MuralPage() {
         />
         <button
           type="submit"
-          className="mt-3 flex items-center gap-2 bg-rdt-gold text-rdt-black font-condensed font-bold uppercase tracking-wide text-sm px-4 py-2.5 rounded hover:bg-white transition-colors"
+          disabled={sending}
+          className="mt-3 flex items-center gap-2 bg-rdt-gold text-rdt-black font-condensed font-bold uppercase tracking-wide text-sm px-4 py-2.5 rounded hover:bg-white transition-colors disabled:opacity-50"
         >
-          <Send size={16} />
+          {sending ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
           Publicar no mural
         </button>
       </form>

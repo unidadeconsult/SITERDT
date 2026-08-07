@@ -2,35 +2,58 @@ import { useState } from 'react';
 import { Heart, Reply, Send } from 'lucide-react';
 import type { Comment } from '../types';
 
-export default function CommentItem({ comment, depth = 0 }: { comment: Comment; depth?: number }) {
+export default function CommentItem({
+  comment,
+  articleId,
+  depth = 0,
+}: {
+  comment: Comment;
+  articleId: string;
+  depth?: number;
+}) {
   const [likes, setLikes] = useState(comment.likes);
   const [liked, setLiked] = useState(false);
   const [replies, setReplies] = useState<Comment[]>(comment.replies);
   const [showForm, setShowForm] = useState(false);
   const [text, setText] = useState('');
+  const [sending, setSending] = useState(false);
 
-  const toggleLike = () => {
-    setLiked((p) => !p);
-    setLikes((p) => (liked ? p - 1 : p + 1));
+  const toggleLike = async () => {
+    if (liked) return;
+    setLiked(true);
+    setLikes((p) => p + 1);
+    try {
+      await fetch('/api/comments', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ articleId, commentId: comment.id }),
+      });
+    } catch {
+      /* falha silenciosa de rede */
+    }
   };
 
-  const submitReply = (e: React.FormEvent) => {
+  const submitReply = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!text.trim()) return;
-    setReplies((prev) => [
-      ...prev,
-      {
-        id: `reply-${Date.now()}`,
-        author: 'Você',
-        avatar: 'https://i.pravatar.cc/150?img=68',
-        date: 'agora mesmo',
-        text: text.trim(),
-        likes: 0,
-        replies: [],
-      },
-    ]);
-    setText('');
-    setShowForm(false);
+    if (!text.trim() || sending) return;
+    setSending(true);
+    try {
+      const res = await fetch('/api/comments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ articleId, parentId: comment.id, author: 'Você', text: text.trim() }),
+      });
+      const data = await res.json();
+      if (res.ok && data.ok) {
+        setReplies((prev) => [...prev, data.comment]);
+        setText('');
+        setShowForm(false);
+      }
+    } catch {
+      /* falha silenciosa de rede */
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -77,7 +100,8 @@ export default function CommentItem({ comment, depth = 0 }: { comment: Comment; 
               />
               <button
                 type="submit"
-                className="p-1.5 rounded-full bg-rdt-gold text-rdt-black hover:bg-white transition-colors"
+                disabled={sending}
+                className="p-1.5 rounded-full bg-rdt-gold text-rdt-black hover:bg-white transition-colors disabled:opacity-50"
                 aria-label="Enviar resposta"
               >
                 <Send size={13} />
@@ -88,7 +112,7 @@ export default function CommentItem({ comment, depth = 0 }: { comment: Comment; 
           {replies.length > 0 && (
             <div className="mt-1">
               {replies.map((r) => (
-                <CommentItem key={r.id} comment={r} depth={depth + 1} />
+                <CommentItem key={r.id} comment={r} articleId={articleId} depth={depth + 1} />
               ))}
             </div>
           )}

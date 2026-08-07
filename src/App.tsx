@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { Analytics } from '@vercel/analytics/react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import LiveScoreTicker from './components/LiveScoreTicker';
@@ -59,6 +60,7 @@ export default function App() {
                   </main>
                   <Footer />
                 </div>
+                <Analytics />
               </PollProvider>
             </OnThisDayProvider>
           </TransfersProvider>

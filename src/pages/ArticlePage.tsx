@@ -80,7 +80,7 @@ export default function ArticlePage() {
           ))}
         </div>
 
-        <CommentSection initialComments={article.comments} />
+        <CommentSection articleId={article.id} initialComments={article.comments} />
 
         {relatedFallback.length > 0 && (
           <div className="mt-14 pt-8 border-t border-white/10">

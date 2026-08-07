@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Heart, MessageCircle, Send } from 'lucide-react';
+import { Heart, MessageCircle, Send, Loader2 } from 'lucide-react';
 import type { Comment, FanPost } from '../types';
 
 export default function FanPostCard({ post }: { post: FanPost }) {
@@ -8,29 +8,44 @@ export default function FanPostCard({ post }: { post: FanPost }) {
   const [replies, setReplies] = useState<Comment[]>(post.replies);
   const [showReplies, setShowReplies] = useState(false);
   const [replyText, setReplyText] = useState('');
+  const [sending, setSending] = useState(false);
 
-  const toggleLike = () => {
-    setLiked((prev) => !prev);
-    setLikes((prev) => (liked ? prev - 1 : prev + 1));
+  const toggleLike = async () => {
+    if (liked) return;
+    setLiked(true);
+    setLikes((prev) => prev + 1);
+    try {
+      await fetch('/api/mural', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ postId: post.id }),
+      });
+    } catch {
+      /* falha silenciosa de rede */
+    }
   };
 
-  const submitReply = (e: React.FormEvent) => {
+  const submitReply = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!replyText.trim()) return;
-    setReplies((prev) => [
-      ...prev,
-      {
-        id: `reply-${Date.now()}`,
-        author: 'Você',
-        avatar: 'https://i.pravatar.cc/150?img=68',
-        date: 'agora mesmo',
-        text: replyText.trim(),
-        likes: 0,
-        replies: [],
-      },
-    ]);
-    setReplyText('');
-    setShowReplies(true);
+    if (!replyText.trim() || sending) return;
+    setSending(true);
+    try {
+      const res = await fetch('/api/mural', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ postId: post.id, author: 'Você', text: replyText.trim() }),
+      });
+      const data = await res.json();
+      if (res.ok && data.ok) {
+        setReplies((prev) => [...prev, data.reply]);
+        setReplyText('');
+        setShowReplies(true);
+      }
+    } catch {
+      /* falha silenciosa de rede */
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -98,10 +113,11 @@ export default function FanPostCard({ post }: { post: FanPost }) {
                 />
                 <button
                   type="submit"
-                  className="p-2 rounded-full bg-rdt-gold text-rdt-black hover:bg-white transition-colors"
+                  disabled={sending}
+                  className="p-2 rounded-full bg-rdt-gold text-rdt-black hover:bg-white transition-colors disabled:opacity-50"
                   aria-label="Enviar resposta"
                 >
-                  <Send size={14} />
+                  {sending ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
                 </button>
               </form>
             </div>

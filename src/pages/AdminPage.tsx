@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ShieldCheck, Lock, Newspaper, Radio, Repeat, CalendarClock, Vote } from 'lucide-react';
+import { ShieldCheck, Lock, Newspaper, Radio, Repeat, CalendarClock, Vote, Download, Loader2 } from 'lucide-react';
 import { getStoredAdminPassword, setStoredAdminPassword, clearStoredAdminPassword } from '../lib/adminAuth';
 import PageHeader from '../components/PageHeader';
 import MateriasAdminTab from '../components/admin/MateriasAdminTab';
@@ -23,6 +23,38 @@ export default function AdminPage() {
   const [unlocked, setUnlocked] = useState(!!getStoredAdminPassword());
   const [authError, setAuthError] = useState('');
   const [section, setSection] = useState<Section>('materias');
+  const [exporting, setExporting] = useState(false);
+
+  const exportBackup = async () => {
+    setExporting(true);
+    try {
+      const res = await fetch('/api/export', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: getStoredAdminPassword() }),
+      });
+      if (res.status === 401) {
+        handleAuthError();
+        return;
+      }
+      const data = await res.json();
+      if (!res.ok || data.ok === false) {
+        alert(data.error || 'Falha ao exportar.');
+        return;
+      }
+      const blob = new Blob([JSON.stringify(data.dump, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `rdt-backup-${new Date().toISOString().slice(0, 10)}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch {
+      alert('Falha ao exportar. Verifique sua conexão.');
+    } finally {
+      setExporting(false);
+    }
+  };
 
   const unlock = (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,12 +112,22 @@ export default function AdminPage() {
           title="Painel de Administrador"
           subtitle="Gerencie o conteúdo do portal RDT."
         />
-        <button
-          onClick={lock}
-          className="text-white/50 hover:text-white text-sm font-condensed uppercase tracking-wide px-3 py-2.5 border border-white/15 rounded -mt-8"
-        >
-          Sair
-        </button>
+        <div className="flex items-center gap-2 -mt-8">
+          <button
+            onClick={exportBackup}
+            disabled={exporting}
+            className="flex items-center gap-1.5 text-white/50 hover:text-rdt-gold text-sm font-condensed uppercase tracking-wide px-3 py-2.5 border border-white/15 rounded disabled:opacity-50"
+          >
+            {exporting ? <Loader2 size={14} className="animate-spin" /> : <Download size={14} />}
+            Exportar backup
+          </button>
+          <button
+            onClick={lock}
+            className="text-white/50 hover:text-white text-sm font-condensed uppercase tracking-wide px-3 py-2.5 border border-white/15 rounded"
+          >
+            Sair
+          </button>
+        </div>
       </div>
 
       <div className="flex gap-2 mb-8 flex-wrap border-b border-white/10 pb-5">

@@ -1,5 +1,6 @@
 {
   "rewrites": [
+    { "source": "/artigo/:id", "destination": "/api/article-page?id=:id" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

@@ -1,28 +1,54 @@
-import { useState } from 'react';
-import { MessageCircle, Send } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { MessageCircle, Send, Loader2 } from 'lucide-react';
 import type { Comment } from '../types';
 import CommentItem from './CommentItem';
 
-export default function CommentSection({ initialComments }: { initialComments: Comment[] }) {
+export default function CommentSection({
+  articleId,
+  initialComments,
+}: {
+  articleId: string;
+  initialComments: Comment[];
+}) {
   const [comments, setComments] = useState<Comment[]>(initialComments);
   const [text, setText] = useState('');
+  const [sending, setSending] = useState(false);
 
-  const submit = (e: React.FormEvent) => {
+  useEffect(() => {
+    let cancelled = false;
+    fetch(`/api/comments?articleId=${encodeURIComponent(articleId)}`)
+      .then((res) => (res.ok ? res.json() : Promise.reject(res)))
+      .then((data) => {
+        if (!cancelled && Array.isArray(data)) setComments(data);
+      })
+      .catch(() => {
+        /* mantém os comentários iniciais em caso de falha */
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [articleId]);
+
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!text.trim()) return;
-    setComments((prev) => [
-      {
-        id: `comment-${Date.now()}`,
-        author: 'Você',
-        avatar: 'https://i.pravatar.cc/150?img=68',
-        date: 'agora mesmo',
-        text: text.trim(),
-        likes: 0,
-        replies: [],
-      },
-      ...prev,
-    ]);
-    setText('');
+    if (!text.trim() || sending) return;
+    setSending(true);
+    try {
+      const res = await fetch('/api/comments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ articleId, author: 'Você', text: text.trim() }),
+      });
+      const data = await res.json();
+      if (res.ok && data.ok) {
+        setComments((prev) => [data.comment, ...prev]);
+        setText('');
+      }
+    } catch {
+      /* falha silenciosa de rede */
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -50,17 +76,18 @@ export default function CommentSection({ initialComments }: { initialComments: C
           />
           <button
             type="submit"
-            className="p-2.5 rounded-lg bg-rdt-gold text-rdt-black hover:bg-white transition-colors shrink-0"
+            disabled={sending}
+            className="p-2.5 rounded-lg bg-rdt-gold text-rdt-black hover:bg-white transition-colors shrink-0 disabled:opacity-50"
             aria-label="Enviar comentário"
           >
-            <Send size={16} />
+            {sending ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
           </button>
         </div>
       </form>
 
       <div className="flex flex-col divide-y divide-white/5">
         {comments.map((c) => (
-          <CommentItem key={c.id} comment={c} />
+          <CommentItem key={c.id} comment={c} articleId={articleId} />
         ))}
         {comments.length === 0 && (
           <p className="text-white/40 text-sm py-6 text-center">
